@@ -23,7 +23,7 @@ for device in visible_devices:
 model = tf.keras.models.load_model("model.weights.best.hdf5")
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 
 IMG_SIZE = (224,224)
 FILE_UPLOAD = 'upload'
