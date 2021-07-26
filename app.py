@@ -2,7 +2,6 @@ import os
 import numpy as np
 import tensorflow as tf
 
-from PIL import Image
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
