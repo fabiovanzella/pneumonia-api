@@ -5,10 +5,10 @@ import tensorflow as tf
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 cors = CORS(app, resource={r"/*":{"origins": "*"}})
 IMG_SIZE = (224,224)
-FILE_UPLOAD = 'upload'
+FILE_UPLOAD = 'static/upload'
 model = tf.keras.models.load_model("model.weights.best.hdf5")
 
 tf.config.set_visible_devices([], 'GPU')
@@ -17,8 +17,8 @@ for device in visible_devices:
     assert device.device_type != 'GPU'
 
 @app.route('/', methods=['GET'])
-def index():
-    return "Hello word"
+def index():    
+    return app.send_static_file('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():  
