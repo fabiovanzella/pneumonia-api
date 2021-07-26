@@ -1,32 +1,25 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 21 09:31:16 2021
-
-@author: fabio
-"""
-
-
-import flask
+import os
 import numpy as np
 import tensorflow as tf
 
-from flask import request, jsonify
+from PIL import Image
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
- # Disable all GPUS
+app = Flask(__name__)
+cors = CORS(app, resource={r"/*":{"origins": "*"}})
+IMG_SIZE = (224,224)
+FILE_UPLOAD = 'upload'
+model = tf.keras.models.load_model("model.weights.best.hdf5")
+
 tf.config.set_visible_devices([], 'GPU')
 visible_devices = tf.config.get_visible_devices()
 for device in visible_devices:
     assert device.device_type != 'GPU'
-        
-# Carrega o melhor modelo
-model = tf.keras.models.load_model("model.weights.best.hdf5")
 
-app = flask.Flask(__name__)
-app.config["DEBUG"] = False
-
-IMG_SIZE = (224,224)
-FILE_UPLOAD = 'upload'
+@app.route('/', methods=['GET'])
+def index():
+    return "Hello word"
 
 @app.route('/predict', methods=['POST'])
 def predict():  
@@ -53,4 +46,9 @@ def predict():
     )
     return resultado
 
-app.run()
+def main():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
+if __name__ == "__main__":
+    main()
