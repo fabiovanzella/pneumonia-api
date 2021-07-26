@@ -2,3 +2,4 @@ upload
 myvenv
 *pyc
 .git
+.vscode
