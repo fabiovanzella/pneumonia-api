@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,62 +9,83 @@
     <title>Album example for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .container {
+          width: 90%;
+          padding-right: 15px;
+          padding-left: 15px;
+          margin-right: auto;
+          margin-left: auto;
+      }
+    </style>
   </head>
 
   <body>
 
-    <header>
-      <div class="collapse bg-dark" id="navbarHeader">
-        <div class="container">
-          
-        </div>
-      </div>
+    <header>      
       <div class="navbar navbar-dark bg-dark box-shadow">
         <div class="container d-flex justify-content-between">
           <a href="#" class="navbar-brand d-flex align-items-center">
             
-            <strong>Predict</strong>
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+            <strong>Pneumonia</strong>
+          </a>          
         </div>
       </div>
     </header>
 
     <main role="main">
-
-      <section class="jumbotron text-center">
-        <div class="container">
-          <h1 class="jumbotron-heading">Detecção de Pneumonia</h1>
-          <p class="lead text-muted">Trata-se de um trabalho de conclusão de curso de Inteligência artificial. O projeto consiste na analise de imagens para fazer uma predição de possíveis casos de pneumonia através de um raio x do tórax.</p>
-          <form>
-            <div class="form-group">              
-              <input type="file" id="file" name="file" />
-              <input type="button" class="btn btn-primary" value="Upload" id="but_upload">
+      <div class="container">
+        <section class="jumbotron text-center">
+          <div class="container">
+            <h1 class="jumbotron-heading">Detecção de Pneumonia</h1>
+            <p class="lead text-muted">Trata-se de um trabalho de conclusão de curso de Inteligência Artificial e Aprendizado de Máquina. O projeto consiste na analise de imagens para fazer uma predição de possíveis casos de pneumonia através de um raio x do tórax.</p>
+            <form>
+              <div class="form-group">              
+                <input type="file" id="file" name="file" />
+                <input type="button" class="btn btn-primary" value="Predict" id="but_predict">            
+              </div>
+            </form>
+            <span class="loading" style="display:none">Carregando...</span>
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example" id="resultado" style="display:none">
+              <button type="button" class="btn btn-warning" id="pneumonia">Middle</button>
+              <button type="button" class="btn btn-success" id="normal">Right</button>
             </div>
-          </form>
-          <p>
-            <a href="#" class="btn btn-primary my-2">Predict</a>            
-          </p>
-          <div id="resultado" style="display:none">
-              <span id="normal"></span>
-              <span id="pneumonia"></span>
+        </section>
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+              <div class="card-body d-flex flex-column align-items-start">
+                <strong class="d-inline-block mb-2 text-primary">Normal</strong>
+                <p class="card-text mb-auto">Imagem de exemplo de um raio x com caracteristicas normais.</p>
+              </div>
+              <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" src="static/normal.jpeg" data-holder-rendered="true">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+              <div class="card-body d-flex flex-column align-items-start">
+                <strong class="d-inline-block mb-2 text-success">Pneumonia</strong>                
+                <p class="card-text mb-auto">Imegem de um raio x com caracteristicas de uma infecção bacteriana.</p>
+                <a href="https://www.saude.go.gov.br/biblioteca/7641-pneumonia">Informações sobre pneumonia</a>
+              </div>
+              <img class="card-img-right flex-auto d-none d-md-block" alt="Thumbnail [200x250]" src="static/pneumonia.jpeg" data-holder-rendered="true" style="width: 200px; height: 250px;">
+            </div>
           </div>
         </div>
-      </section>
+      </div>        
     </main>
 
     <footer class="text-muted">
       <div class="container">
-        <p>Este é um projeto para fins didaticos. Não utilize para nenhum fim real!</p>        
+        <p>Este é um projeto para fins didaticos. Não utilize para outros fins!</p>
       </div>
     </footer>
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function(){
-      $("#but_upload").click(function(){        
+      $("#but_predict").click(function(){        
+        $(".loading").show();
         $("#normal").empty();
         $("#pneumonia").empty();
         var fd = new FormData();
@@ -76,7 +96,8 @@
           fd.append('file',files[0]);
 
             $.ajax({
-                url: 'https://vanzella-pneumonia-api.herokuapp.com/predict',
+                // url: 'https://vanzella-pneumonia-api.herokuapp.com/predict',
+                url: 'http://192.168.15.7:5000/predict',
                 type: 'post',
                 data: fd,
                 contentType: false,
@@ -84,9 +105,10 @@
                 success: function(response){
                   if(response != 0){
                       console.log(response);
-                      $("#normal").html("Normal: " + response.normal);
-                      $("#pneumonia").html("Pneumonia:" + response.pneumonia);
+                      $("#normal").html("Normal: " + response.normal * 100 + "%");
+                      $("#pneumonia").html("Pneumonia: " + response.pneumonia * 100 + "%");
                       $("#resultado").show();
+                      $(".loading").hide();
                   }else{
                       alert('file not uploaded');
                   }
