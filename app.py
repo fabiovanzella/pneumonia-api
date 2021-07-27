@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import wget
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -9,6 +10,11 @@ app = Flask(__name__, static_folder="static")
 cors = CORS(app, resource={r"/*":{"origins": "*"}})
 IMG_SIZE = (224,224)
 FILE_UPLOAD = 'static/upload'
+
+local_file = 'model.weights.best.hdf5'
+remote_url = "https://github.com/fabiovanzella/pneumonia-api/releases/download/v0.2-model/model.weights.best.hdf5"
+wget.download(remote_url, local_file)
+
 model = tf.keras.models.load_model("model.weights.best.hdf5")
 
 tf.config.set_visible_devices([], 'GPU')
