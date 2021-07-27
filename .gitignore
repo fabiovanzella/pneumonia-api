@@ -3,3 +3,4 @@ myvenv
 *pyc
 .git
 .vscode
+model.weights.best.hdf5

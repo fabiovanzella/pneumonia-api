@@ -15,7 +15,7 @@ local_file = 'model.weights.best.hdf5'
 remote_url = "https://github.com/fabiovanzella/pneumonia-api/releases/download/v0.2-model/model.weights.best.hdf5"
 wget.download(remote_url, local_file)
 
-model = tf.keras.models.load_model("model.weights.best.hdf5")
+model = tf.keras.models.load_model(local_file)
 
 tf.config.set_visible_devices([], 'GPU')
 visible_devices = tf.config.get_visible_devices()
