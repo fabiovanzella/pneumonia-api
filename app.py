@@ -11,9 +11,11 @@ cors = CORS(app, resource={r"/*":{"origins": "*"}})
 IMG_SIZE = (224,224)
 FILE_UPLOAD = 'static/upload'
 
-local_file = 'model.weights.best.hdf5'
+#local_file = 'model.weights.best.hdf5'
+local_file = 'model_vgg19.weights.best.hdf5'
 if not os.path.isfile(local_file):
-    remote_url = "https://github.com/fabiovanzella/pneumonia-api/releases/download/v0.2-model/model.weights.best.hdf5"
+    #remote_url = "https://github.com/fabiovanzella/pneumonia-api/releases/download/v0.2-model/model.weights.best.hdf5"
+    remote_url = "https://github.com/fabiovanzella/pneumonia-api/releases/download/v0.3-model/model_vgg19.weights.best.hdf5"
     wget.download(remote_url, local_file)
 
 model = tf.keras.models.load_model(local_file)
